@@ -11,6 +11,7 @@ var express = require('express'),
 
 var app = express();
 
+var csv = require("fast-csv");
 var db;
 
 var cloudant;
@@ -91,6 +92,7 @@ function initDBConnection() {
 initDBConnection();
 
 app.get('/', routes.index);
+app.get('/map', routes.map);
 
 function createResponseData(id, name, value, attachments) {
 
@@ -138,7 +140,16 @@ var saveDocument = function(id, name, value, response) {
     });
 
 }
-
+app.get('/api/test',function(request, response){
+	csv
+ .fromPath("public/uploads/revenu.csv")
+ .on("data", function(data){
+     console.log(data);
+ })
+ .on("end", function(){
+     console.log("done");
+ });
+	});
 app.get('/api/favorites/attach', function(request, response) {
     var doc = request.query.id;
     var key = request.query.key;
